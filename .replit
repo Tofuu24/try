@@ -1,0 +1,29 @@
+modules = ["java-graalvm22.3"]
+[agent]
+expertMode = true
+
+[nix]
+channel = "stable-25_05"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Drawing App"
+
+[[workflows.workflow]]
+name = "Drawing App"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd draw && mvn exec:java -Dexec.mainClass=\"com.gabriel.draw.Main\""
+
+[workflows.workflow.metadata]
+outputType = "vnc"
