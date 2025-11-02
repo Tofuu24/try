@@ -1,7 +1,7 @@
 package com.gabriel.draw.service;
 
 import com.gabriel.draw.command.AddShapeCommand;
-import com.gabriel.draw.command.SetDrawModeCommand;
+import com.gabriel.draw.command.DeleteShapeCommand;
 import com.gabriel.drawfx.DrawMode;
 import com.gabriel.drawfx.ShapeMode;
 import com.gabriel.drawfx.command.Command;
@@ -9,14 +9,20 @@ import com.gabriel.drawfx.command.CommandService;
 import com.gabriel.drawfx.model.Drawing;
 import com.gabriel.drawfx.model.Shape;
 import com.gabriel.drawfx.service.AppService;
+import com.gabriel.draw.view.DrawingView;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
 public class DrawingCommandAppService implements AppService {
     public AppService appService;
     protected static AppService drawingCommandAppService = null;
+    private DrawingView drawingView;
+    
+    // Add setter for drawingView
+    public void setDrawingView(DrawingView drawingView) {
+        this.drawingView = drawingView;
+    }
 
     protected DrawingCommandAppService(AppService appService){
         this.appService = appService;
@@ -60,8 +66,7 @@ public class DrawingCommandAppService implements AppService {
 
     @Override
     public void setDrawMode(DrawMode drawMode) {
-        Command command = new SetDrawModeCommand(appService, drawMode);
-        CommandService.ExecuteCommand(command);
+        appService.setDrawMode(drawMode);
     }
 
     @Override
@@ -86,12 +91,28 @@ public class DrawingCommandAppService implements AppService {
 
     @Override
     public void move(Shape shape, Point start, Point end) {
-        appService.move(shape,start, end);
+        // Delegate actual move to the wrapped appService for immediate effect.
+        // Command registration should be handled by the controller when appropriate
+        appService.move(shape, start, end);
     }
 
     @Override
     public void move(Point start, Point end) {
-        appService.move(start, end);
+        // Get all selected shapes
+        List<Shape> selectedShapes = appService.getDrawing().getShapes().stream()
+                .filter(Shape::isSelected)
+                .toList();
+                
+        if (!selectedShapes.isEmpty()) {
+            // Create and execute a move command for each selected shape
+            // Delegate incremental move to wrapped service; controller will register a single command on mouse release
+            for (Shape shape : selectedShapes) {
+                appService.move(shape, start, end);
+            }
+        } else {
+            // Fallback to direct move if no shapes are selected
+            appService.move(start, end);
+        }
     }
 
     @Override
@@ -111,13 +132,16 @@ public class DrawingCommandAppService implements AppService {
 
     @Override
     public void create(Shape shape) {
-        Command command = new AddShapeCommand(appService, shape);
+        Runnable repaintCallback = drawingView::repaint;
+        Command command = new AddShapeCommand(appService, shape, repaintCallback);
         CommandService.ExecuteCommand(command);
     }
 
     @Override
     public void delete(Shape shape) {
-        appService.delete(shape);
+        Runnable repaintCallback = drawingView::repaint;
+        Command command = new DeleteShapeCommand(appService, shape, repaintCallback);
+        CommandService.ExecuteCommand(command);
     }
 
     @Override

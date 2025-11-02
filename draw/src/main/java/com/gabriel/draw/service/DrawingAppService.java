@@ -9,22 +9,23 @@ import com.gabriel.drawfx.model.Shape;
 import com.gabriel.drawfx.service.*;
 import lombok.Setter;
 
+import com.gabriel.drawfx.service.AppService;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.*;
 
 public class DrawingAppService implements AppService {
 
-    final private Drawing drawing;;
+    private final Drawing drawing;
 
     @Setter
-    DrawingView drawingView;
+    private DrawingView drawingView;
 
-    ImageFileService imageFileService;
-    MoverService moverService;
-    ScalerService scalerService;
-    SearchService searchService;
-    XmlDocumentService xmlDocumentService;
+    private ImageFileService imageFileService;
+    private MoverService moverService;
+    private ScalerService scalerService;
+    private SearchService searchService;
+    private XmlDocumentService xmlDocumentService;
 
     DocumentService documentService;
     public DrawingAppService(){

@@ -40,6 +40,11 @@ public class DrawingFrame extends JFrame {
         drawingAppService = new DrawingAppService();
         appService = DrawingCommandAppService.getInstance(drawingAppService);
 
+        drawingView = new DrawingView(appService);
+        if (appService instanceof DrawingCommandAppService) {
+            ((DrawingCommandAppService) appService).setDrawingView(drawingView);
+        }
+
         pane = getContentPane();
         setLayout(new BorderLayout());
 
@@ -55,15 +60,16 @@ public class DrawingFrame extends JFrame {
         drawingToolBar = new DrawingToolBar(actionListener);
         drawingToolBar.setVisible(true);
 
-        drawingView = new DrawingView(appService);
         actionListener.setComponent(drawingView);
-
 
         drawingController = new DrawingController(appService, drawingView);
         drawingController.setDrawingView(drawingView);
 
         drawingView.addMouseMotionListener(drawingController);
         drawingView.addMouseListener(drawingController);
+        drawingView.addKeyListener(drawingController);
+        drawingView.setFocusable(true);
+        drawingView.requestFocusInWindow();
         drawingView.setPreferredSize(new Dimension(4095, 8192));
 
         jScrollPane = new JScrollPane(drawingView);

@@ -8,6 +8,8 @@ public class CommandService {
     public static void ExecuteCommand(Command command) {
         command.execute();
         undoStack.push(command);
+        // Clear redo stack whenever a new command is executed
+        redoStack.clear();
     }
 
     public static void undo() {
@@ -18,11 +20,27 @@ public class CommandService {
         redoStack.push(command);
     }
 
+    /**
+     * Register a command on the undo stack without executing it.
+     * Use this when the model has already been updated (for example during drag)
+     * and you just want to record the command so it can be undone/redone.
+     */
+    public static void register(Command command) {
+        undoStack.push(command);
+        // Clear redo stack whenever a new command is registered
+        redoStack.clear();
+    }
+
+    public static boolean canRedo() {
+        return !redoStack.empty();
+    }
+
     public static void redo() {
-        if (redoStack.empty())
+        if (!canRedo()) {
             return;
+        }
         Command command = redoStack.pop();
-        command.execute();
+        command.redo();
         undoStack.push(command);
     }
 }

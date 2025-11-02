@@ -16,11 +16,14 @@ public class DrawingView extends JPanel {
     AppService appService;
 
     public DrawingView(AppService appService){
-        this.appService  = appService;
-        JTextArea textArea = new JTextArea();
-        add(textArea);
-        textArea.setVisible(true);
-
+        this.appService = appService;
+        setFocusable(true);
+        requestFocusInWindow();
+        
+        // Remove the JTextArea if it's not needed
+        // JTextArea textArea = new JTextArea();
+        // add(textArea);
+        // textArea.setVisible(true);
     }
 
     @Override
