@@ -145,8 +145,7 @@ public class Splash extends JPanel implements MouseListener {
         DrawingFrame mf = new DrawingFrame();
         mf.setExtendedState(mf.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         mf.setVisible(true);
-        topFrame.setVisible(false);
-        this.dispatchEvent(new WindowEvent(topFrame, WindowEvent.WINDOW_CLOSING));
+        topFrame.dispose();
     }
     
     private void openFileDialog() {

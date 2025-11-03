@@ -110,91 +110,73 @@ public class PropertySheet extends PropertyPanel {
         }
         shapeProp.setValue(shape);
 
-
-        ColorProperty currentColorProp = new ColorProperty("Fore color", appService.getColor());
+        Color foreColor = shape != null ? shape.getColor() : appService.getColor();
+        ColorProperty currentColorProp = new ColorProperty("Fore color", foreColor);
         propertyTable.addProperty(currentColorProp);
 
-        ColorProperty currentFillProp = new ColorProperty("Fill color",  appService.getFill());
+        Color fillColor = shape != null ? shape.getFill() : appService.getFill();
+        ColorProperty currentFillProp = new ColorProperty("Fill color",  fillColor);
         propertyTable.addProperty(currentFillProp);
 
-        ColorProperty currentStartColorProp = new ColorProperty("Start color",  appService.getStartColor());
-        propertyTable.addProperty(currentStartColorProp);
-
-        ColorProperty currentEndColorProp = new ColorProperty("End color",  appService.getEndColor());
-        propertyTable.addProperty(currentEndColorProp);
-
-        IntegerProperty startx = new IntegerProperty("Start x", appService.getXLocation());
-        propertyTable.addProperty(startx );
-
-        IntegerProperty starty = new IntegerProperty("Start y", appService.getXLocation());
-        propertyTable.addProperty(starty );
-
-        IntegerProperty endx = new IntegerProperty("End x", appService.getXLocation());
-        propertyTable.addProperty(endx );
-
-        IntegerProperty endy = new IntegerProperty("End y", appService.getXLocation());
-        propertyTable.addProperty(endy );
-
-        BooleanProperty isGradientProp = new BooleanProperty("IsGradient",  appService.isGradient() );
-        propertyTable.addProperty(isGradientProp);
-
-        BooleanProperty isVisibleProp = new BooleanProperty("IsVisible",  appService.isGradient() );
-        propertyTable.addProperty(isVisibleProp);
-
-        IntegerProperty lineThicknessProp = new IntegerProperty("Line Thickness", appService.getThickness());
+        int lineThickness = shape != null ? shape.getThickness() : appService.getThickness();
+        IntegerProperty lineThicknessProp = new IntegerProperty("Line Thickness", lineThickness);
         propertyTable.addProperty(lineThicknessProp);
 
-        IntegerProperty xlocProp = new IntegerProperty("X Location", appService.getXLocation());
+        int xLocation = shape != null ? shape.getLocation().x : appService.getXLocation();
+        IntegerProperty xlocProp = new IntegerProperty("X Location", xLocation);
         propertyTable.addProperty(xlocProp);
 
-        IntegerProperty ylocProp = new IntegerProperty("Y Location", appService.getYLocation());
+        int yLocation = shape != null ? shape.getLocation().y : appService.getYLocation();
+        IntegerProperty ylocProp = new IntegerProperty("Y Location", yLocation);
         propertyTable.addProperty(ylocProp);
 
-        IntegerProperty width = new IntegerProperty("Width", appService.getXLocation());
-        propertyTable.addProperty(width );
+        int width = shape != null ? shape.getWidth() : appService.getWidth();
+        IntegerProperty widthProp = new IntegerProperty("Width", width);
+        propertyTable.addProperty(widthProp);
 
-        IntegerProperty height = new IntegerProperty("Height", appService.getXLocation());
-        propertyTable.addProperty(height);
-
-        BooleanProperty prop3 = new BooleanProperty("Boolean", true);
-        propertyTable.addProperty(prop3);
+        int height = shape != null ? shape.getHeight() : appService.getHeight();
+        IntegerProperty heightProp = new IntegerProperty("Height", height);
+        propertyTable.addProperty(heightProp);
 
         if(shape!=null) {
             BooleanProperty selectedProp = new BooleanProperty("is Selected", shape.isSelected());
             propertyTable.addProperty(selectedProp);
+            
+            boolean isGradient = shape.isGradient();
+            BooleanProperty isGradientProp = new BooleanProperty("IsGradient", isGradient);
+            propertyTable.addProperty(isGradientProp);
+            
+            if(isGradient) {
+                Color startColor = shape.getStartColor();
+                ColorProperty currentStartColorProp = new ColorProperty("Start color", startColor);
+                propertyTable.addProperty(currentStartColorProp);
+
+                Color endColor = shape.getEndColor();
+                ColorProperty currentEndColorProp = new ColorProperty("End color", endColor);
+                propertyTable.addProperty(currentEndColorProp);
+            }
+            
+            boolean isVisible = shape.isVisible();
+            BooleanProperty isVisibleProp = new BooleanProperty("IsVisible", isVisible);
+            propertyTable.addProperty(isVisibleProp);
+            
+            String text = shape.getText();
+            if(text != null && !text.isEmpty()) {
+                StringProperty stringProp = new StringProperty("Text", text);
+                propertyTable.addProperty(stringProp);
+                
+                Font font = shape.getFont();
+                if(font != null) {
+                    stringProp = new StringProperty("Font family", font.getFamily());
+                    propertyTable.addProperty(stringProp);
+
+                    IntegerProperty intProp = new IntegerProperty("Font style", font.getStyle());
+                    propertyTable.addProperty(intProp);
+
+                    intProp = new IntegerProperty("Font size", font.getSize());
+                    propertyTable.addProperty(intProp);
+                }
+            }
         }
-
-        FloatProperty prop4 = new FloatProperty("Float", 1.2f);
-        propertyTable.addProperty(prop4);
-
-        StringProperty stringProp = new StringProperty("Text", appService.getText());
-        propertyTable.addProperty(stringProp);
-
-        stringProp = new StringProperty("Image", appService.getImageFilename());
-        propertyTable.addProperty(stringProp);
-
-        Font font = appService.getFont();
-
-        stringProp = new StringProperty("Font family", font.getFamily());
-        propertyTable.addProperty(stringProp);
-
-        IntegerProperty intProp = new IntegerProperty("Font style", font.getStyle());
-        propertyTable.addProperty(intProp);
-
-        intProp = new IntegerProperty("Font size", font.getSize());
-        propertyTable.addProperty(intProp);
-
-        StringProperty prop6 = new StringProperty("String 2", "test", new StringValidator(
-                new String[]{"test", "test 2", "foo"}
-        ));
-        propertyTable.addProperty(prop6);
-
-        DoubleProperty prop8 = new DoubleProperty("Double", 2.34,
-                new CompoundValidator(
-                        new DoubleValidator(),
-                        new DoubleRangeValidator(-1.2, 45.33, true, false),
-                        new DoubleZeroPolicyValidator(false)
-                )
-        );
     }
 }
