@@ -11,12 +11,15 @@ This is a multi-module Maven project with the following modules:
 - **fontchooser**: Custom font selection dialog
 - **batik**: SVG rendering support
 
-## Recent Changes (November 2025)
-1. ✅ Fixed missing resource warnings for toolbar icons
-2. ✅ Enhanced splash screen with custom background and logo
-3. ✅ Implemented comprehensive property sheet that displays actual shape properties
-4. ✅ Added full undo/redo support for property changes using Command pattern
-5. ✅ Improved visual design and user experience
+## Recent Changes (November 3, 2025)
+1. ✅ Fixed missing resource warnings for toolbar icons (imagefile.png, font.png)
+2. ✅ Enhanced splash screen with custom gradient background, logo, and launch buttons
+3. ✅ Fixed critical splash screen lifecycle bug (DISPOSE_ON_CLOSE instead of EXIT_ON_CLOSE)
+4. ✅ Implemented comprehensive property sheet that displays actual shape properties in real-time
+5. ✅ Added full undo/redo support for property changes using Command pattern (SetPropertyCommand)
+6. ✅ Enhanced PropertyEventListener to route all editable properties through undoable commands
+7. ✅ Fixed menu bar typo and improved keyboard shortcuts (Ctrl+Z for Undo, Ctrl+Y for Redo)
+8. ✅ All changes reviewed and approved by architect - application fully functional
 
 ## Features
 
